@@ -1,6 +1,7 @@
 import { RepoCard } from "@/components/repo-card";
 import { CountdownTimer } from "@/components/countdown-timer";
 import { LimitSelector } from "@/components/limit-selector";
+import { PaginationControls } from "@/components/pagination-controls";
 import { ProjectApproachModal } from "@/components/project-approach-modal";
 import { fetchHealth, fetchTrending } from "@/lib/api";
 import type { HealthResponse, TrendingResponse } from "@/lib/types";
@@ -123,7 +124,7 @@ export default async function HomePage(props: {
                     </div>
                 </aside>
 
-                <section className="repo-section" aria-label="Trending repositories section">
+                <section className="repo-section repo-section--repos" aria-label="Trending repositories section">
                     <div className="repo-section__header">
                         <div className="repo-section__heading">
                             <h2 className="repo-section__title">Trending Repositories</h2>
@@ -133,6 +134,9 @@ export default async function HomePage(props: {
                     </div>
 
                     <section className="repo-grid" aria-label="Trending repositories">
+                        <div className="repo-grid__loading-indicator" aria-hidden="true">
+                            <span className="activity-indicator" />
+                        </div>
                         {data.items.map((item, index) => (
                             <RepoCard
                                 key={`${item.repoId}-${item.runId}`}
@@ -143,21 +147,13 @@ export default async function HomePage(props: {
                     </section>
                 </section>
 
-                <nav className="pagination" aria-label="Pagination">
-                    {data.meta.hasPrevPage ? (
-                        <a href={`/?page=${data.meta.page - 1}&limit=${data.meta.limit}`} className="btn">Previous</a>
-                    ) : (
-                        <span className="btn btn--disabled">Previous</span>
-                    )}
-                    <span className="pagination__info">
-                        Page {data.meta.page} of {data.meta.totalPages}
-                    </span>
-                    {data.meta.hasNextPage ? (
-                        <a href={`/?page=${data.meta.page + 1}&limit=${data.meta.limit}`} className="btn">Next</a>
-                    ) : (
-                        <span className="btn btn--disabled">Next</span>
-                    )}
-                </nav>
+                <PaginationControls
+                    page={data.meta.page}
+                    totalPages={data.meta.totalPages}
+                    limit={data.meta.limit}
+                    hasPrevPage={data.meta.hasPrevPage}
+                    hasNextPage={data.meta.hasNextPage}
+                />
             </section>
         </main>
     );

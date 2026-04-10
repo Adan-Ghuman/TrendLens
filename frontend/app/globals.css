@@ -365,9 +365,46 @@ a {
 }
 
 .repo-grid {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.repo-grid__loading-indicator {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background: rgba(11, 14, 12, 0.45);
+  border-radius: 10px;
+  z-index: 4;
+}
+
+.activity-indicator {
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 999px;
+  border: 2px solid rgba(155, 229, 100, 0.3);
+  border-top-color: var(--accent);
+  animation: repoSpin 800ms linear infinite;
+}
+
+html[data-repo-loading="true"]
+  .repo-section--repos
+  .repo-grid__loading-indicator {
+  display: flex;
+}
+
+@keyframes repoSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .repo-section {
