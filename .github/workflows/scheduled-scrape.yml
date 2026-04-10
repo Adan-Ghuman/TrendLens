@@ -1,0 +1,50 @@
+name: Scheduled Scrape Trigger
+
+on:
+  schedule:
+    # Every 5 minutes (minimum practical interval for GitHub-hosted schedules)
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: scheduled-scrape-trigger
+  cancel-in-progress: false
+
+jobs:
+  trigger-scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Trigger backend scrape endpoint
+        env:
+          BACKEND_BASE_URL: ${{ secrets.BACKEND_BASE_URL }}
+          SCRAPE_TRIGGER_SECRET: ${{ secrets.SCRAPE_TRIGGER_SECRET }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${BACKEND_BASE_URL:-}" ]; then
+            echo "Missing required secret: BACKEND_BASE_URL"
+            exit 1
+          fi
+
+          if [ -z "${SCRAPE_TRIGGER_SECRET:-}" ]; then
+            echo "Missing required secret: SCRAPE_TRIGGER_SECRET"
+            exit 1
+          fi
+
+          HEALTH_STATUS=$(curl -sS -o /dev/null -w "%{http_code}" "${BACKEND_BASE_URL%/}/api/health")
+          echo "Health status: ${HEALTH_STATUS}"
+
+          HTTP_STATUS=$(curl -sS -o response.json -w "%{http_code}" \
+            -X POST "${BACKEND_BASE_URL%/}/api/scrape" \
+            -H "Authorization: Bearer ${SCRAPE_TRIGGER_SECRET}" \
+            -H "Content-Type: application/json")
+
+          echo "Scrape trigger status: ${HTTP_STATUS}"
+          cat response.json
+
+          if [ "${HTTP_STATUS}" -lt 200 ] || [ "${HTTP_STATUS}" -ge 300 ]; then
+            echo "Scrape trigger failed"
+            exit 1
+          fi
