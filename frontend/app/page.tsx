@@ -3,6 +3,7 @@ import { CountdownTimer } from "@/components/countdown-timer";
 import { LimitSelector } from "@/components/limit-selector";
 import { ProjectApproachModal } from "@/components/project-approach-modal";
 import { fetchHealth, fetchTrending } from "@/lib/api";
+import type { HealthResponse, TrendingResponse } from "@/lib/types";
 import type { ReactNode } from "react";
 
 export default async function HomePage(props: {
@@ -18,10 +19,46 @@ export default async function HomePage(props: {
         : NaN;
     const limit = [10, 20, 30].includes(requestedLimit) ? requestedLimit : 10;
 
-    const [data, health] = await Promise.all([
-        fetchTrending(page, limit),
-        fetchHealth(),
-    ]);
+    let data: TrendingResponse;
+    let health: HealthResponse;
+    let loadError: string | null = null;
+
+    try {
+        [data, health] = await Promise.all([
+            fetchTrending(page, limit),
+            fetchHealth(),
+        ]);
+    } catch {
+        loadError = "Backend API is unavailable. Check backend Vercel env vars and deployment logs.";
+        data = {
+            items: [],
+            meta: {
+                page,
+                limit,
+                totalItems: 0,
+                totalPages: 0,
+                hasNextPage: false,
+                hasPrevPage: false,
+                count: 0,
+                source: "https://github.com/trending",
+                runId: "",
+                lastSuccessfulRunAt: "",
+                isStale: true,
+                ageSeconds: 0,
+            },
+        };
+        health = {
+            status: "degraded",
+            mongodbConnected: false,
+            schedulerMode: "external",
+            scheduleMinutes: 5,
+            lastRun: {
+                runId: null,
+                status: null,
+                completedAt: null,
+            },
+        };
+    }
 
     return (
         <main className="page-shell">
@@ -46,6 +83,17 @@ export default async function HomePage(props: {
             </header>
 
             <section className="board">
+                {loadError ? (
+                    <div className="repo-section" role="status" aria-live="polite">
+                        <div className="repo-section__header">
+                            <div className="repo-section__heading">
+                                <h2 className="repo-section__title">Deployment Notice</h2>
+                                <p className="repo-section__subtitle">{loadError}</p>
+                            </div>
+                        </div>
+                    </div>
+                ) : null}
+
                 <aside className="system-bar">
                     <div className="system-bar__item">
                         <span className="system-bar__label">Snapshot ID</span>
