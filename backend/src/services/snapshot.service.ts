@@ -4,12 +4,12 @@ import {
   SCRAPER,
   SORTING,
   SYSTEM_STATE_ID,
-} from "../config/constants";
-import {RepositorySnapshotModel} from "../models/repositorySnapshot.model";
-import {SystemStateModel} from "../models/systemState.model";
-import type {TrendingResponse} from "../types/api";
-import type {RepositorySnapshot} from "../types/repository";
-import {ageSecondsFrom} from "../utils/time";
+} from "../config/constants.js";
+import {RepositorySnapshotModel} from "../models/repositorySnapshot.model.js";
+import {SystemStateModel} from "../models/systemState.model.js";
+import type {TrendingResponse} from "../types/api.js";
+import type {RepositorySnapshot} from "../types/repository.js";
+import {ageSecondsFrom} from "../utils/time.js";
 
 export interface ActiveSnapshot {
   runId: string;

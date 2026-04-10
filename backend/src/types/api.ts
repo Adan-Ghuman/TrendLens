@@ -1,5 +1,5 @@
-import type {RepositorySnapshot} from "./repository";
-import type {ScrapeRunStatus} from "./scrape";
+import type {RepositorySnapshot} from "./repository.js";
+import type {ScrapeRunStatus} from "./scrape.js";
 
 export interface TrendingResponseMeta {
   page: number;

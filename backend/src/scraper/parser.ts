@@ -1,6 +1,6 @@
 import {load} from "cheerio";
-import {parseStars} from "./normalizer";
-import type {ParsedRepository} from "../types/repository";
+import {parseStars} from "./normalizer.js";
+import type {ParsedRepository} from "../types/repository.js";
 
 const toRepoId = (href: string | undefined): string | null => {
   if (!href) {

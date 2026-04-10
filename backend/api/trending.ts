@@ -1,7 +1,7 @@
 import type {IncomingMessage, ServerResponse} from "node:http";
-import {getTrendingResponse} from "../src/services/snapshot.service";
-import {clampLimit} from "../src/utils/validators";
-import {readQueryNumber, requireMethod, sendJson, withDb} from "./_utils";
+import {getTrendingResponse} from "../src/services/snapshot.service.js";
+import {clampLimit} from "../src/utils/validators.js";
+import {readQueryNumber, requireMethod, sendJson, withDb} from "./_utils.js";
 
 export default async function handler(
   req: IncomingMessage & {

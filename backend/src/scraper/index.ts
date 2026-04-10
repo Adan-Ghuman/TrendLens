@@ -1,8 +1,8 @@
-import {SCRAPER} from "../config/constants";
-import {fetchSourceHtml} from "./fetcher";
-import {parseTrendingHtml} from "./parser";
-import type {ParsedRepository} from "../types/repository";
-import {logger} from "../utils/logger";
+import {SCRAPER} from "../config/constants.js";
+import {fetchSourceHtml} from "./fetcher.js";
+import {parseTrendingHtml} from "./parser.js";
+import type {ParsedRepository} from "../types/repository.js";
+import {logger} from "../utils/logger.js";
 
 export interface ScraperOutput {
   items: ParsedRepository[];

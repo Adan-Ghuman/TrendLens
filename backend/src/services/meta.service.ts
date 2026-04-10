@@ -1,7 +1,7 @@
-import {SCHEDULER, SYSTEM_STATE_ID} from "../config/constants";
-import {SystemStateModel} from "../models/systemState.model";
-import type {MetaResponse} from "../types/api";
-import {ageSecondsFrom} from "../utils/time";
+import {SCHEDULER, SYSTEM_STATE_ID} from "../config/constants.js";
+import {SystemStateModel} from "../models/systemState.model.js";
+import type {MetaResponse} from "../types/api.js";
+import {ageSecondsFrom} from "../utils/time.js";
 
 export const getMetaResponse = async (): Promise<MetaResponse> => {
   const activeState = await SystemStateModel.findById(SYSTEM_STATE_ID)

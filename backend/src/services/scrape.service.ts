@@ -1,14 +1,14 @@
 import mongoose from "mongoose";
 import {randomUUID} from "node:crypto";
-import {SCRAPER, SCHEDULER} from "../config/constants";
-import {RepositorySnapshotModel} from "../models/repositorySnapshot.model";
-import {ScrapeRunModel} from "../models/scrapeRun.model";
-import {runScraper} from "../scraper";
-import type {RepositorySnapshot} from "../types/repository";
-import type {ScrapeResult} from "../types/scrape";
-import {logger} from "../utils/logger";
-import {hasMinimumItems} from "../utils/validators";
-import {promoteSnapshotRun} from "./snapshot.service";
+import {SCRAPER, SCHEDULER} from "../config/constants.js";
+import {RepositorySnapshotModel} from "../models/repositorySnapshot.model.js";
+import {ScrapeRunModel} from "../models/scrapeRun.model.js";
+import {runScraper} from "../scraper/index.js";
+import type {RepositorySnapshot} from "../types/repository.js";
+import type {ScrapeResult} from "../types/scrape.js";
+import {logger} from "../utils/logger.js";
+import {hasMinimumItems} from "../utils/validators.js";
+import {promoteSnapshotRun} from "./snapshot.service.js";
 
 const extractErrorMessage = (error: unknown): string => {
   return error instanceof Error ? error.message : "Unknown scrape error";

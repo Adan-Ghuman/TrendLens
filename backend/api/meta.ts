@@ -1,6 +1,6 @@
 import type {IncomingMessage, ServerResponse} from "node:http";
-import {getMetaResponse} from "../src/services/meta.service";
-import {requireMethod, sendJson, withDb} from "./_utils";
+import {getMetaResponse} from "../src/services/meta.service.js";
+import {requireMethod, sendJson, withDb} from "./_utils.js";
 
 export default async function handler(
   req: IncomingMessage,

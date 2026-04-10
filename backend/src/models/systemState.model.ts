@@ -1,5 +1,5 @@
 import {Schema, model, type InferSchemaType} from "mongoose";
-import {COLLECTIONS, SYSTEM_STATE_ID} from "../config/constants";
+import {COLLECTIONS, SYSTEM_STATE_ID} from "../config/constants.js";
 
 const systemStateSchema = new Schema(
   {

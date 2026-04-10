@@ -1,5 +1,5 @@
 import {Schema, model, type InferSchemaType} from "mongoose";
-import {COLLECTIONS} from "../config/constants";
+import {COLLECTIONS} from "../config/constants.js";
 
 const scrapeRunSchema = new Schema(
   {

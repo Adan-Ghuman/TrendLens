@@ -1,6 +1,6 @@
 import type {IncomingMessage, ServerResponse} from "node:http";
-import {runScrapeJob} from "../src/services/scrape.service";
-import {ensureCronAuth, requireMethod, sendJson, withDb} from "./_utils";
+import {runScrapeJob} from "../src/services/scrape.service.js";
+import {ensureCronAuth, requireMethod, sendJson, withDb} from "./_utils.js";
 
 export default async function handler(
   req: IncomingMessage,

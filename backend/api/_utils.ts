@@ -1,7 +1,7 @@
 import type {IncomingMessage, ServerResponse} from "node:http";
-import {env} from "../src/config/env";
-import {connectToDatabase} from "../src/db/connection";
-import {logger} from "../src/utils/logger";
+import {env} from "../src/config/env.js";
+import {connectToDatabase} from "../src/db/connection.js";
+import {logger} from "../src/utils/logger.js";
 
 type ApiHandler = (
   req: IncomingMessage & {

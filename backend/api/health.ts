@@ -1,6 +1,6 @@
 import type {IncomingMessage, ServerResponse} from "node:http";
-import {getHealthStatus} from "../src/services/health.service";
-import {requireMethod, sendJson, withDb} from "./_utils";
+import {getHealthStatus} from "../src/services/health.service.js";
+import {requireMethod, sendJson, withDb} from "./_utils.js";
 
 export default async function handler(
   req: IncomingMessage,

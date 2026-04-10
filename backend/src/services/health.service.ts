@@ -1,7 +1,7 @@
-import {isDatabaseConnected} from "../db/connection";
-import {SCHEDULER} from "../config/constants";
-import {ScrapeRunModel} from "../models/scrapeRun.model";
-import type {HealthResponse} from "../types/api";
+import {isDatabaseConnected} from "../db/connection.js";
+import {SCHEDULER} from "../config/constants.js";
+import {ScrapeRunModel} from "../models/scrapeRun.model.js";
+import type {HealthResponse} from "../types/api.js";
 
 export const getHealthStatus = async (): Promise<HealthResponse> => {
   const lastRun = await ScrapeRunModel.findOne()
