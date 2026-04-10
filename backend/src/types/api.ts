@@ -34,3 +34,10 @@ export interface HealthResponse {
     completedAt: string | null;
   };
 }
+
+export interface MetaResponse {
+  scheduleMinutes: number;
+  runId: string | null;
+  lastSuccessfulRunAt: string | null;
+  ageSeconds: number | null;
+}

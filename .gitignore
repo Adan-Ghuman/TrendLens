@@ -15,6 +15,7 @@ coverage/
 # Markdown files
 *.md
 **/*.md
+!README.md
 
 # Runtime and cache
 .cache/

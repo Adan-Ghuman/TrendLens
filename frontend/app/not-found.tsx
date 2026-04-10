@@ -1,6 +1,4 @@
-import type { ReactNode } from "react";
-
-export default function NotFound(): ReactNode {
+export default function NotFound() {
     return (
         <main className="page-shell">
             <section className="hero">

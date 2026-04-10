@@ -3,7 +3,11 @@ import type {HealthResponse, TrendingResponse} from "./types";
 const defaultBaseUrl = "http://localhost:3001";
 
 export const getApiBaseUrl = (): string => {
-  return process.env.NEXT_PUBLIC_API_BASE_URL ?? defaultBaseUrl;
+  return (
+    process.env.NEXT_PUBLIC_API_URL ??
+    process.env.NEXT_PUBLIC_API_BASE_URL ??
+    defaultBaseUrl
+  );
 };
 
 export const fetchTrending = async (
@@ -28,7 +32,7 @@ export const fetchTrending = async (
 };
 
 export const fetchHealth = async (): Promise<HealthResponse> => {
-  const url = new URL("/health", getApiBaseUrl());
+  const url = new URL("/api/health", getApiBaseUrl());
   const response = await fetch(url.toString(), {
     cache: "no-store",
   });

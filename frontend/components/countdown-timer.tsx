@@ -109,7 +109,7 @@ export const CountdownTimer = ({
 
         const pollForNewSnapshot = async () => {
             try {
-                const url = new URL("/health", getApiBaseUrl());
+                const url = new URL("/api/health", getApiBaseUrl());
                 const response = await fetch(url.toString(), { cache: "no-store" });
                 if (!response.ok) {
                     return;

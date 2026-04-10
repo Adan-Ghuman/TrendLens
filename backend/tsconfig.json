@@ -11,5 +11,5 @@
     "isolatedModules": true,
     "types": ["node", "bun-types"]
   },
-  "include": ["src/**/*.ts", "scripts/**/*.ts"]
+  "include": ["src/**/*.ts", "scripts/**/*.ts", "api/**/*.ts"]
 }

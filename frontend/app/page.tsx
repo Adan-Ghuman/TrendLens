@@ -1,6 +1,7 @@
 import { RepoCard } from "@/components/repo-card";
 import { CountdownTimer } from "@/components/countdown-timer";
 import { LimitSelector } from "@/components/limit-selector";
+import { ProjectApproachModal } from "@/components/project-approach-modal";
 import { fetchHealth, fetchTrending } from "@/lib/api";
 import type { ReactNode } from "react";
 
@@ -25,12 +26,15 @@ export default async function HomePage(props: {
     return (
         <main className="page-shell">
             <header className="hero">
-                <div className="hero__content">
-                    <div className="hero__eyebrow">GitHub trends</div>
-                    <h1 className="hero__title">TrendLens</h1>
-                    <p className="hero__lede">
-                        A simple view of trending repositories, updated on schedule and easy to compare.
-                    </p>
+                <div className="hero__top">
+                    <div className="hero__content">
+                        <div className="hero__eyebrow">GitHub trends</div>
+                        <h1 className="hero__title">TrendLens</h1>
+                        <p className="hero__lede">
+                            A simple view of trending repositories, updated on schedule and easy to compare.
+                        </p>
+                    </div>
+                    <ProjectApproachModal />
                 </div>
 
                 <CountdownTimer

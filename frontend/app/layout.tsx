@@ -21,9 +21,10 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "InvestKaar Screening",
+    title: "TrendLens",
     description: "A sharp dashboard for the latest trending GitHub repositories.",
 };
+
 
 export default function RootLayout({
     children,

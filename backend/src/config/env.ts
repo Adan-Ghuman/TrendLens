@@ -6,6 +6,7 @@ export interface EnvConfig {
   nodeEnv: string;
   port: number;
   mongodbUri: string;
+  scrapeTriggerSecret: string;
   scrapeSourceUrl: string;
   scrapeScheduleCron: string;
   scrapeScheduleMinutes: number;
@@ -28,6 +29,7 @@ export const env: EnvConfig = {
   nodeEnv,
   port: parseNumber(process.env.PORT, 3001),
   mongodbUri: process.env.MONGODB_URI ?? "",
+  scrapeTriggerSecret: process.env.SCRAPE_TRIGGER_SECRET ?? "",
   scrapeSourceUrl:
     process.env.SCRAPE_SOURCE_URL ?? "https://github.com/trending",
   scrapeScheduleCron: process.env.SCRAPE_SCHEDULE_CRON ?? defaultCron,
@@ -38,9 +40,11 @@ export const env: EnvConfig = {
   scrapeTimeoutMs: parseNumber(process.env.SCRAPE_TIMEOUT_MS, 10000),
   scrapeMinItems: parseNumber(process.env.SCRAPE_MIN_ITEMS, 10),
   scrapeSchedulerMode:
-    process.env.SCRAPE_SCHEDULER_MODE === "external"
-      ? "external"
-      : "in-process",
+    process.env.SCRAPE_SCHEDULER_MODE === "in-process"
+      ? "in-process"
+      : isProd
+        ? "external"
+        : "in-process",
 };
 
 if (!env.mongodbUri) {

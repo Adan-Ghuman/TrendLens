@@ -14,7 +14,7 @@ export const LimitSelector = ({ currentLimit }: LimitSelectorProps) => {
     const searchParams = useSearchParams();
 
     const onLimitChange = (value: string) => {
-        const params = new URLSearchParams(searchParams.toString());
+        const params = new URLSearchParams(searchParams?.toString() ?? "");
         params.set("limit", value);
         params.set("page", "1");
         router.push(`${pathname}?${params.toString()}`);

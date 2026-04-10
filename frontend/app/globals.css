@@ -78,8 +78,185 @@ a {
   gap: 14px;
 }
 
+.hero__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+
 .hero__content {
   flex: 1;
+}
+
+.approach-trigger {
+  height: 2rem;
+  padding: 0 0.75rem;
+  border-radius: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  font-size: 0.82rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease;
+}
+
+.approach-trigger:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.approach-trigger:focus-visible {
+  outline: 2px solid rgba(155, 229, 100, 0.35);
+  outline-offset: 1px;
+}
+
+.approach-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  background: rgba(7, 9, 8, 0.78);
+  backdrop-filter: blur(5px);
+  padding: 16px;
+  animation: approachFade 150ms ease-out;
+}
+
+.approach-modal {
+  width: min(48rem, 100%);
+  max-height: min(84vh, 720px);
+  overflow: auto;
+  border: 1px solid rgba(233, 223, 198, 0.12);
+  border-radius: 16px;
+  background: linear-gradient(
+    180deg,
+    rgba(21, 27, 23, 0.99),
+    rgba(13, 17, 14, 0.99)
+  );
+  box-shadow: 0 28px 72px rgba(0, 0, 0, 0.5);
+  animation: approachScaleIn 170ms ease-out;
+}
+
+.approach-modal__header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid rgba(233, 223, 198, 0.1);
+  background: rgba(15, 20, 17, 0.98);
+  backdrop-filter: blur(10px);
+}
+
+.approach-modal__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.approach-modal__intro {
+  margin: 4px 0 0;
+  color: rgba(244, 237, 220, 0.64);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.approach-modal__close {
+  height: 2.1rem;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(233, 223, 198, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.approach-modal__close:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(155, 229, 100, 0.28);
+  color: var(--accent-strong);
+}
+
+.approach-modal__close:focus-visible {
+  outline: 2px solid rgba(155, 229, 100, 0.35);
+  outline-offset: 1px;
+}
+
+.approach-modal__body {
+  display: grid;
+  gap: 12px;
+  padding: 14px 18px 18px;
+}
+
+.approach-section {
+  display: grid;
+  gap: 8px;
+  padding: 12px 12px 13px;
+  border: 1px solid rgba(233, 223, 198, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.approach-section__title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.approach-section__text,
+.approach-section__list {
+  margin: 0;
+  color: rgba(244, 237, 220, 0.74);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.approach-section__list {
+  padding-left: 18px;
+  display: grid;
+  gap: 5px;
+}
+
+.approach-section__list li::marker {
+  color: rgba(155, 229, 100, 0.8);
+}
+
+@keyframes approachFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes approachScaleIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .hero__eyebrow {
@@ -447,8 +624,10 @@ a {
   border-radius: 0.45rem;
   border: 1px solid var(--line);
   background:
-    linear-gradient(45deg, transparent 50%, rgba(244, 237, 220, 0.7) 50%) calc(100% - 10px) calc(50% - 2px) / 6px 6px no-repeat,
-    linear-gradient(135deg, rgba(244, 237, 220, 0.7) 50%, transparent 50%) calc(100% - 6px) calc(50% - 2px) / 6px 6px no-repeat,
+    linear-gradient(45deg, transparent 50%, rgba(244, 237, 220, 0.7) 50%)
+      calc(100% - 10px) calc(50% - 2px) / 6px 6px no-repeat,
+    linear-gradient(135deg, rgba(244, 237, 220, 0.7) 50%, transparent 50%)
+      calc(100% - 6px) calc(50% - 2px) / 6px 6px no-repeat,
     rgba(12, 15, 13, 0.88);
   color: var(--text);
   font-family: var(--font-mono), monospace;
@@ -510,6 +689,10 @@ a.btn:hover {
 
   .hero {
     padding: 18px;
+  }
+
+  .hero__top {
+    flex-direction: column;
   }
 
   .system-bar {
