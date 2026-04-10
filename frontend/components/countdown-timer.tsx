@@ -20,6 +20,7 @@ type HealthResponse = {
 };
 
 const POLL_INTERVAL_MS = 30_000;
+const FRESH_SNAPSHOT_GRACE_MS = 20_000;
 
 const formatClock = (iso: string): string => {
     if (!iso) {
@@ -34,7 +35,7 @@ const formatClock = (iso: string): string => {
 };
 
 const formatDuration = (ms: number): string => {
-    const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+    const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
     return `${minutes}m ${seconds}s`;
@@ -69,11 +70,16 @@ export const CountdownTimer = ({
     };
 
     const scheduleMs = Math.max(1, scheduleMinutes) * 60 * 1000;
-    const lastRunMs = new Date(initialLastSuccessfulRunAt).getTime();
-    const nextRunMs = Number.isFinite(lastRunMs) ? lastRunMs + scheduleMs : NaN;
+    const rawLastRunMs = new Date(initialLastSuccessfulRunAt).getTime();
+    const countdownAnchorMs = Number.isFinite(rawLastRunMs) && isMounted
+        ? now - rawLastRunMs <= FRESH_SNAPSHOT_GRACE_MS
+            ? now
+            : rawLastRunMs
+        : rawLastRunMs;
+    const nextRunMs = Number.isFinite(countdownAnchorMs) ? countdownAnchorMs + scheduleMs : NaN;
     const remainingMs = Number.isFinite(nextRunMs) ? nextRunMs - now : NaN;
-    const overdueCycle = Number.isFinite(lastRunMs) && isMounted
-        ? Math.floor(Math.max(0, now - lastRunMs) / scheduleMs)
+    const overdueCycle = Number.isFinite(rawLastRunMs) && isMounted
+        ? Math.floor(Math.max(0, now - rawLastRunMs) / scheduleMs)
         : -1;
 
     useEffect(() => {

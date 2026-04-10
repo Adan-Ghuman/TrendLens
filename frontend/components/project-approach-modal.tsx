@@ -98,7 +98,7 @@ export const ProjectApproachModal = () => {
                                     How it works
                                 </h2>
                                 <p className="approach-modal__intro">
-                                    A short note on how I built it and the tradeoffs I made.
+                                    Quick overview of how data flows in production and why I designed it this way.
                                 </p>
                             </div>
                             <button
@@ -117,7 +117,8 @@ export const ProjectApproachModal = () => {
                                 <h3 className="approach-section__title">How it works</h3>
                                 <ul className="approach-section__list">
                                     <li>I scrape GitHub Trending to pull in the latest repositories.</li>
-                                    <li>A cron job runs on a schedule so the data stays fresh without me clicking anything.</li>
+                                    <li>In production, a GitHub Actions cron job runs every 5 minutes and calls a protected <strong>POST /api/scrape</strong> endpoint.</li>
+                                    <li>Each run creates a fresh snapshot and promotes it as the active one.</li>
                                     <li>Instead of fetching on every page load, I store the results and reuse them.</li>
                                     <li>The API reads from that stored data and sends it to the dashboard with pagination.</li>
                                     <li>The dashboard shows the latest snapshot along with basic status details.</li>
@@ -142,7 +143,8 @@ export const ProjectApproachModal = () => {
                                     <li>Elysia for the backend API.</li>
                                     <li>MongoDB and Mongoose for stored snapshot data.</li>
                                     <li>Cheerio for parsing GitHub Trending.</li>
-                                    <li>node-cron for scheduled updates.</li>
+                                    <li>GitHub Actions cron in production to trigger scrape runs externally.</li>
+                                    <li>node-cron for local/dev scheduled runs.</li>
                                     <li>Next.js and React for the dashboard UI.</li>
                                 </ul>
                             </section>
