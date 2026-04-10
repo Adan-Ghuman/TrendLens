@@ -1,0 +1,112 @@
+import { RepoCard } from "@/components/repo-card";
+import { CountdownTimer } from "@/components/countdown-timer";
+import { LimitSelector } from "@/components/limit-selector";
+import { fetchHealth, fetchTrending } from "@/lib/api";
+import type { ReactNode } from "react";
+
+export default async function HomePage(props: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}): Promise<ReactNode> {
+    const searchParams = await props.searchParams;
+    const page = typeof searchParams.page === "string"
+        ? Math.max(1, parseInt(searchParams.page, 10) || 1)
+        : 1;
+
+    const requestedLimit = typeof searchParams.limit === "string"
+        ? Number(searchParams.limit)
+        : NaN;
+    const limit = [10, 20, 30].includes(requestedLimit) ? requestedLimit : 10;
+
+    const [data, health] = await Promise.all([
+        fetchTrending(page, limit),
+        fetchHealth(),
+    ]);
+
+    return (
+        <main className="page-shell">
+            <header className="hero">
+                <div className="hero__content">
+                    <div className="hero__eyebrow">GitHub trends</div>
+                    <h1 className="hero__title">TrendLens</h1>
+                    <p className="hero__lede">
+                        A simple view of trending repositories, updated on schedule and easy to compare.
+                    </p>
+                </div>
+
+                <CountdownTimer
+                    initialLastSuccessfulRunAt={data.meta.lastSuccessfulRunAt}
+                    initialRunId={data.meta.runId}
+                    scheduleMinutes={health.scheduleMinutes}
+                    initialLastRunStatus={health.lastRun.status}
+                />
+            </header>
+
+            <section className="board">
+                <aside className="system-bar">
+                    <div className="system-bar__item">
+                        <span className="system-bar__label">Snapshot ID</span>
+                        <strong className="system-bar__val" title={data.meta.runId || "Unavailable"}>
+                            {data.meta.runId ? `${data.meta.runId.substring(0, 8)}…` : "Unavailable"}
+                        </strong>
+                        <span className="system-bar__desc">
+                            from {data.meta.source ? new URL(data.meta.source).hostname : 'source'}
+                        </span>
+                    </div>
+
+                    <div className="system-bar__item">
+                        <span className="system-bar__label">Results</span>
+                        <strong className="system-bar__val">{data.meta.totalItems}</strong>
+                        <span className="system-bar__desc">Top repos in this fetch set</span>
+                    </div>
+
+                    <div className="system-bar__item">
+                        <span className="system-bar__label">System Status</span>
+                        <strong className={`system-bar__val system-bar__val--${data.meta.isStale ? "stale" : "fresh"}`}>
+                            <span className="status-dot"></span>
+                            {data.meta.isStale ? "Stale Data" : "Healthy"}
+                        </strong>
+                        <span className="system-bar__desc">
+                            {data.meta.isStale ? "Beyond freshness window" : "On schedule"}
+                        </span>
+                    </div>
+                </aside>
+
+                <section className="repo-section" aria-label="Trending repositories section">
+                    <div className="repo-section__header">
+                        <div className="repo-section__heading">
+                            <h2 className="repo-section__title">Trending Repositories</h2>
+                            <p className="repo-section__subtitle">Sorted by stars descending, then repository ID ascending.</p>
+                        </div>
+                        <LimitSelector currentLimit={limit} />
+                    </div>
+
+                    <section className="repo-grid" aria-label="Trending repositories">
+                        {data.items.map((item, index) => (
+                            <RepoCard
+                                key={`${item.repoId}-${item.runId}`}
+                                item={item}
+                                index={(page - 1) * 10 + index}
+                            />
+                        ))}
+                    </section>
+                </section>
+
+                <nav className="pagination" aria-label="Pagination">
+                    {data.meta.hasPrevPage ? (
+                        <a href={`/?page=${data.meta.page - 1}&limit=${data.meta.limit}`} className="btn">Previous</a>
+                    ) : (
+                        <span className="btn btn--disabled">Previous</span>
+                    )}
+                    <span className="pagination__info">
+                        Page {data.meta.page} of {data.meta.totalPages}
+                    </span>
+                    {data.meta.hasNextPage ? (
+                        <a href={`/?page=${data.meta.page + 1}&limit=${data.meta.limit}`} className="btn">Next</a>
+                    ) : (
+                        <span className="btn btn--disabled">Next</span>
+                    )}
+                </nav>
+            </section>
+        </main>
+    );
+}
