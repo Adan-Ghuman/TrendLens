@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { getApiBaseUrl } from "@/lib/api";
 
 type CountdownTimerProps = {
@@ -20,7 +20,6 @@ type HealthResponse = {
 };
 
 const POLL_INTERVAL_MS = 30_000;
-const FRESH_SNAPSHOT_GRACE_MS = 20_000;
 
 const formatClock = (iso: string): string => {
     if (!iso) {
@@ -54,6 +53,10 @@ export const CountdownTimer = ({
     const [lastSeenRunId, setLastSeenRunId] = useState(initialRunId);
     const [lastCountdownRefreshCycle, setLastCountdownRefreshCycle] = useState<number>(-1);
     const [lastKnownStatus, setLastKnownStatus] = useState(initialLastRunStatus);
+    const previousRunIdRef = useRef(initialRunId);
+    const [countdownStartMs, setCountdownStartMs] = useState(() =>
+        new Date(initialLastSuccessfulRunAt).getTime(),
+    );
 
     useEffect(() => {
         setIsMounted(true);
@@ -69,14 +72,26 @@ export const CountdownTimer = ({
         });
     };
 
+    useEffect(() => {
+        const parsedLastRunMs = new Date(initialLastSuccessfulRunAt).getTime();
+        if (!Number.isFinite(parsedLastRunMs)) {
+            setCountdownStartMs(parsedLastRunMs);
+            previousRunIdRef.current = initialRunId;
+            return;
+        }
+
+        if (isMounted && initialRunId && initialRunId !== previousRunIdRef.current) {
+            setCountdownStartMs(Date.now());
+        } else {
+            setCountdownStartMs(parsedLastRunMs);
+        }
+
+        previousRunIdRef.current = initialRunId;
+    }, [initialLastSuccessfulRunAt, initialRunId, isMounted]);
+
     const scheduleMs = Math.max(1, scheduleMinutes) * 60 * 1000;
     const rawLastRunMs = new Date(initialLastSuccessfulRunAt).getTime();
-    const countdownAnchorMs = Number.isFinite(rawLastRunMs) && isMounted
-        ? now - rawLastRunMs <= FRESH_SNAPSHOT_GRACE_MS
-            ? now
-            : rawLastRunMs
-        : rawLastRunMs;
-    const nextRunMs = Number.isFinite(countdownAnchorMs) ? countdownAnchorMs + scheduleMs : NaN;
+    const nextRunMs = Number.isFinite(countdownStartMs) ? countdownStartMs + scheduleMs : NaN;
     const remainingMs = Number.isFinite(nextRunMs) ? nextRunMs - now : NaN;
     const overdueCycle = Number.isFinite(rawLastRunMs) && isMounted
         ? Math.floor(Math.max(0, now - rawLastRunMs) / scheduleMs)
@@ -135,6 +150,7 @@ export const CountdownTimer = ({
 
                 if (hasNewSuccessfulRun && payload.lastRun.runId) {
                     setLastSeenRunId(payload.lastRun.runId);
+                    setCountdownStartMs(Date.now());
                     if (!isRefreshing) {
                         triggerRefresh();
                     }
